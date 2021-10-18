@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import "antd/dist/antd.css";
-import { Typography, Row, Col, Button,  Modal, Input, Card } from "antd";
-import { connect } from "react-redux";
+import { Typography, Row, Col, Button, Modal, Input, Card } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import { addComment, deleteComment } from "../actions";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import "antd/dist/antd.css";
 
-const MovieItem = ({ movie, allComments, addComment, deleteComment }) => {
+const MovieItem = ({ movie }) => {
   const [movieComments, setMovieComments] = useState([]);
   const [newComment, setNewComment] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const allComments = useSelector((state) => state.allComments);
+  const dispatch = useDispatch();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -17,7 +19,7 @@ const MovieItem = ({ movie, allComments, addComment, deleteComment }) => {
   const handleOk = () => {
     setIsModalVisible(false);
 
-    addComment(newComment);
+    dispatch(addComment(newComment));
     setNewComment({});
   };
 
@@ -79,7 +81,9 @@ const MovieItem = ({ movie, allComments, addComment, deleteComment }) => {
                         extra={
                           <DeleteOutlined
                             onClick={() => {
-                              deleteComment({ id: movie.id, idx: idx });
+                              dispatch(
+                                deleteComment({ id: movie.id, idx: idx })
+                              );
                             }}
                           />
                         }
@@ -147,10 +151,4 @@ const MovieItem = ({ movie, allComments, addComment, deleteComment }) => {
   );
 };
 
-function mapStateToProps(state) {
-  return state;
-}
-
-export default connect(mapStateToProps, { addComment, deleteComment })(
-  MovieItem
-);
+export default MovieItem;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "antd";
 import { Card, List, Typography } from "antd";
 import { Pagination } from "antd";
@@ -10,12 +10,16 @@ import { Footer } from "antd/lib/layout/layout";
 
 const { Header, Content } = Layout;
 
-function App({ movies, movieCount, fetchMovies }) {
+function App() {
   const [limit, setLimit] = useState(5);
+
   const [page, setPage] = useState(1);
+  const movies = useSelector((state) => state.movies);
+  const movieCount = useSelector((state) => state.movieCount);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchMovies(limit, page);
+    dispatch(fetchMovies(limit, page));
   }, [page]);
 
   return (
@@ -66,8 +70,5 @@ function App({ movies, movieCount, fetchMovies }) {
   );
 }
 
-function mapStateToProps(state) {
-  return state;
-}
 
-export default connect(mapStateToProps, { fetchMovies })(App);
+export default App;
